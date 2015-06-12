@@ -117,6 +117,7 @@ void List<T>::Add(const T& data)
 	tail = newnode;
 }
 
+//COMPLEXITY: O(n)
 template <class T>
 void List<T>::Remove(const T& data)
 {
@@ -130,6 +131,9 @@ void List<T>::Remove(const T& data)
 				tracker->previous->next = tracker->next;
 			if (tracker->next)
 				tracker->next->previous = tracker->previous;
+
+			if (head)
+				head = head->next;
 
 			delete tracker;
 			break;
@@ -179,9 +183,16 @@ void List<T>::Clear()
 template <class T>
 void List<T>::Insert(const T& data, int index)
 {
+	Node* newnode = new Node(data);
+
+	if (!head)
+	{
+		head = newnode;
+		return;
+	}
+
 	int count = 0;
 	Node* tracker = head;
-	Node* newnode = new Node(data);
 
 	while (count != index && tracker->next)
 	{
@@ -189,10 +200,14 @@ void List<T>::Insert(const T& data, int index)
 		count++;
 	}
 
-	tracker->previous->next = newnode;
+	if (tracker->previous)
+		tracker->previous->next = newnode;
 	newnode->previous = tracker->previous;
 	tracker->previous = newnode;
 	newnode->next = tracker;
+
+	if (tracker == head)
+		head = newnode;
 }
 
 #endif
